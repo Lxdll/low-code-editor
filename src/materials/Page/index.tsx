@@ -12,6 +12,7 @@ export default function Page({ id, children }: CommonComponentProps) {
   return (
     <div
       ref={drop}
+      data-component-id={id}
       style={{ border: canDrop ? '2px solid blue' : 'none' }}
       className="box-border h-[100%] p-[20px]"
     >

@@ -2,13 +2,30 @@
  * @author: luxudongg@gmail.com
  * description
  */
-import React from 'react';
+import React, { MouseEventHandler, useState } from 'react';
 import { Component, useComponentStore } from '@/store';
 import { useComponentConfigStore } from '@/store/component-config';
+import HoverMask from './HoverMask';
 
 export default function Canvas() {
+  const [hoverComponentId, setHoverComponentId] = useState<number>();
+
   const { list } = useComponentStore();
   const { componentConfig } = useComponentConfigStore();
+
+  const handleMouseHover: MouseEventHandler = (e) => {
+    const path = e.nativeEvent.composedPath();
+
+    for (let i = 0; i < path.length; i++) {
+      const el = path[i] as HTMLElement;
+
+      const componentId = el.dataset.componentId;
+      if (componentId) {
+        setHoverComponentId(+componentId);
+        return;
+      }
+    }
+  };
 
   function renderComponents(list: Component[]): React.ReactNode {
     return list.map((item) => {
@@ -31,5 +48,21 @@ export default function Canvas() {
     });
   }
 
-  return <div className="h-[100%]">{renderComponents(list)}</div>;
+  return (
+    <div
+      onMouseOver={handleMouseHover}
+      onMouseLeave={() => setHoverComponentId(undefined)}
+      className="canvas-area h-[100%]"
+    >
+      {renderComponents(list)}
+      {hoverComponentId && (
+        <HoverMask
+          componentId={hoverComponentId}
+          containerClassName="canvas-area"
+          portalWrapperClassName="portal-wrapper"
+        />
+      )}
+      <div className="portal-wrapper"></div>
+    </div>
+  );
 }
