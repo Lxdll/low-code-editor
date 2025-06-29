@@ -6,16 +6,19 @@ export interface Component {
   children?: Component[];
   parentId?: number;
   props: unknown;
-  desc?: string;
+  desc: string;
 }
 
 type State = {
   list: Component[];
+  currentComponentId: number | undefined;
+  currentComponent: Component | null;
 };
 type Action = {
   addComponent: (component: Component, parentId: number) => void;
   deleteComponent: (id: number) => void;
   updateComponentProps: (id: number, props: unknown) => void;
+  setCurrentComponentId: (componentId: number | undefined) => void;
 };
 export const useComponentStore = create<State & Action>((set, get) => ({
   list: [
@@ -30,6 +33,7 @@ export const useComponentStore = create<State & Action>((set, get) => ({
           name: 'Container',
           props: {},
           parentId: 1,
+          desc: '容器',
           children: [
             {
               id: 3,
@@ -38,12 +42,15 @@ export const useComponentStore = create<State & Action>((set, get) => ({
                 text: '无敌',
               },
               parentId: 2,
+              desc: '按钮',
             },
           ],
         },
       ],
     },
   ],
+  currentComponentId: undefined,
+  currentComponent: null,
   addComponent: (component: Component, parentId: number) =>
     set((state) => {
       if (parentId) {
@@ -56,7 +63,7 @@ export const useComponentStore = create<State & Action>((set, get) => ({
 
         component.parentId = parentId;
 
-        return { list: state.list };
+        return { list: [...state.list] };
       }
 
       return { list: [...state.list, component] };
@@ -95,10 +102,16 @@ export const useComponentStore = create<State & Action>((set, get) => ({
       return { list: [...state.list] };
     });
   },
+  setCurrentComponentId: (componentId: number | undefined) => {
+    set((state) => ({
+      currentComponentId: componentId,
+      currentComponent: getComponentById(componentId, state.list),
+    }));
+  },
 }));
 
 export const getComponentById = (
-  id: number,
+  id: number | undefined,
   list: Component[]
 ): Component | null => {
   if (!id) return null;

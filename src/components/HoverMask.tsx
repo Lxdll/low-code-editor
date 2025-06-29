@@ -32,8 +32,7 @@ export default function HoverMask(props: HoverMaskProps) {
 
   useEffect(() => {
     updatePosition();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [componentId]);
+  }, [componentId, list]);
 
   const updatePosition = () => {
     if (!componentId) return;
@@ -107,7 +106,7 @@ export default function HoverMask(props: HoverMaskProps) {
             whiteSpace: 'nowrap',
           }}
         >
-          {curComponent?.name}
+          {curComponent?.desc}
         </div>
       </div>
     </>,

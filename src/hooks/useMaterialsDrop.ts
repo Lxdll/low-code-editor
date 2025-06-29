@@ -12,13 +12,14 @@ export function useMaterialsDrop(accept: string[], id: number) {
       const didDrop = monitor.didDrop();
       if (didDrop) return;
 
-      const defaultProps = componentConfig[item.type].defaultProps;
+      const { defaultProps, desc } = componentConfig[item.type];
 
       addComponent(
         {
           id: new Date().getTime(),
           name: item.type,
           props: defaultProps,
+          desc,
         },
         id
       );

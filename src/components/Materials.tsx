@@ -11,7 +11,7 @@ export default function Materials() {
   const { componentConfig } = useComponentConfigStore();
 
   const components = useMemo(() => {
-    return Object.values(componentConfig);
+    return Object.values(componentConfig).filter((i) => i.name !== 'Page');
   }, [componentConfig]);
 
   return (

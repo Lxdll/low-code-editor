@@ -6,11 +6,13 @@ import React, { MouseEventHandler, useState } from 'react';
 import { Component, useComponentStore } from '@/store';
 import { useComponentConfigStore } from '@/store/component-config';
 import HoverMask from './HoverMask';
+import SelectedMask from './SelectedMask';
 
 export default function Canvas() {
   const [hoverComponentId, setHoverComponentId] = useState<number>();
 
-  const { list } = useComponentStore();
+  const { list, currentComponentId, setCurrentComponentId } =
+    useComponentStore();
   const { componentConfig } = useComponentConfigStore();
 
   const handleMouseHover: MouseEventHandler = (e) => {
@@ -19,9 +21,23 @@ export default function Canvas() {
     for (let i = 0; i < path.length; i++) {
       const el = path[i] as HTMLElement;
 
-      const componentId = el.dataset.componentId;
+      const componentId = el.dataset?.componentId;
       if (componentId) {
         setHoverComponentId(+componentId);
+        return;
+      }
+    }
+  };
+
+  const handleClick: MouseEventHandler = (e) => {
+    const path = e.nativeEvent.composedPath();
+
+    for (let i = 0; i < path.length; i++) {
+      const el = path[i] as HTMLElement;
+
+      const componentId = el.dataset?.componentId;
+      if (componentId) {
+        setCurrentComponentId(+componentId);
         return;
       }
     }
@@ -51,11 +67,12 @@ export default function Canvas() {
   return (
     <div
       onMouseOver={handleMouseHover}
+      onClick={handleClick}
       onMouseLeave={() => setHoverComponentId(undefined)}
       className="canvas-area h-[100%]"
     >
       {renderComponents(list)}
-      {hoverComponentId && (
+      {hoverComponentId && hoverComponentId !== currentComponentId && (
         <HoverMask
           componentId={hoverComponentId}
           containerClassName="canvas-area"
@@ -63,6 +80,13 @@ export default function Canvas() {
         />
       )}
       <div className="portal-wrapper"></div>
+      {currentComponentId && (
+        <SelectedMask
+          portalWrapperClassName="portal-wrapper"
+          containerClassName="canvas-area"
+          componentId={currentComponentId}
+        />
+      )}
     </div>
   );
 }

@@ -11,7 +11,7 @@ interface MaterialsItemProps {
 }
 
 export default function MaterialsItem({ item }: MaterialsItemProps) {
-  const { name } = item;
+  const { name, desc } = item;
 
   const [, dragSource] = useDrag({
     type: name,
@@ -25,7 +25,7 @@ export default function MaterialsItem({ item }: MaterialsItemProps) {
       ref={dragSource}
       className="m-[10px] inline-block cursor-move border-[1px] border-dashed border-[#000] bg-white px-[10px] py-[8px] hover:bg-[#ccc]"
     >
-      {name}
+      {desc}
     </div>
   );
 }
