@@ -46,12 +46,12 @@ export default function Canvas() {
   function renderComponents(list: Component[]): React.ReactNode {
     return list.map((item) => {
       const config = componentConfig?.[item.name];
-      if (!config?.component) return;
+      if (!config?.dev) return;
 
-      const { component, defaultProps } = config;
+      const { dev, defaultProps } = config;
 
       return React.createElement(
-        component,
+        dev,
         {
           key: item.id,
           id: item.id,

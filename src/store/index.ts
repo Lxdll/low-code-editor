@@ -1,3 +1,4 @@
+import { Mode } from '@/types';
 import { CSSProperties } from 'react';
 import { create } from 'zustand';
 
@@ -12,11 +13,13 @@ export interface Component {
 }
 
 type State = {
+  mode: Mode;
   list: Component[];
   currentComponentId: number | undefined;
   currentComponent: Component | null;
 };
 type Action = {
+  setMode: (newMode: Mode) => void;
   addComponent: (component: Component, parentId: number) => void;
   deleteComponent: (id: number) => void;
   updateComponentProps: (id: number, props: unknown) => void;
@@ -28,6 +31,7 @@ type Action = {
   ) => void;
 };
 export const useComponentStore = create<State & Action>((set) => ({
+  mode: 'edit',
   list: [
     {
       id: 1,
@@ -58,6 +62,9 @@ export const useComponentStore = create<State & Action>((set) => ({
   ],
   currentComponentId: undefined,
   currentComponent: null,
+  setMode: (newMode: Mode) => {
+    set(() => ({ mode: newMode }));
+  },
   addComponent: (component: Component, parentId: number) =>
     set((state) => {
       if (parentId) {
