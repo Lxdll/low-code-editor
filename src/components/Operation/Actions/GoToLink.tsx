@@ -1,34 +1,45 @@
 import { useComponentStore } from '@/store';
-import { ComponentEvent } from '@/types';
-import { Input } from 'antd';
+import TextArea from 'antd/es/input/TextArea';
+import { useState } from 'react';
 
-export default function GoToLink(props: { event: ComponentEvent }) {
-  const { event } = props;
+export interface GoToLinkConfig {
+  type: 'goToLink';
+  url: string;
+}
 
-  const { currentComponentId, currentComponent, updateComponentProps } =
-    useComponentStore();
+interface Props {
+  defaultValue?: string;
+  onChange?: (config: GoToLinkConfig) => void;
+}
 
-  function urlChange(eventName: string, value: string) {
+export default function GoToLink(props: Props) {
+  const { defaultValue, onChange } = props;
+
+  const [value, setValue] = useState(defaultValue);
+
+  const { currentComponentId } = useComponentStore();
+
+  function urlChange(newVal: string) {
     if (!currentComponentId) return;
 
-    updateComponentProps(currentComponentId, {
-      [eventName]: {
-        ...currentComponent?.props?.[eventName],
-        url: value,
-      },
+    setValue(newVal);
+    onChange?.({
+      type: 'goToLink',
+      url: newVal,
     });
   }
 
   return (
-    <div className="mt-[10px]">
+    <div className="mt-[40px]">
       <div className="flex items-center gap-[10px]">
-        <div>链接</div>
+        <div>跳转链接</div>
         <div>
-          <Input
+          <TextArea
+            style={{ height: 200, width: 500, border: '1px solid #000' }}
             onChange={(e) => {
-              urlChange(event.name, e.target.value);
+              urlChange(e.target.value);
             }}
-            value={currentComponent?.props?.[event.name]?.url}
+            value={value || ''}
           />
         </div>
       </div>
