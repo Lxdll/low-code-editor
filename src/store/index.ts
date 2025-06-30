@@ -7,7 +7,8 @@ export interface Component {
   name: string;
   children?: Component[];
   parentId?: number;
-  props: unknown;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  props: any;
   desc: string;
   styles?: CSSProperties;
 }

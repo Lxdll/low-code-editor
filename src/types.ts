@@ -24,6 +24,7 @@ export interface ComponentConfig {
   desc: string;
   setter?: ComponentSetter[];
   stylesSetter?: ComponentSetter[];
+  events?: ComponentEvent[];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   dev: any;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -31,3 +32,8 @@ export interface ComponentConfig {
 }
 
 export type Mode = 'edit' | 'preview';
+
+export interface ComponentEvent {
+  name: string;
+  label: string;
+}

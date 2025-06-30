@@ -1,10 +1,38 @@
 import { Component, useComponentStore } from '@/store';
 import { useComponentConfigStore } from '@/store/component-config';
 import React from 'react';
+import { message } from 'antd';
 
 export function Preview() {
   const { list } = useComponentStore();
   const { componentConfig } = useComponentConfigStore();
+
+  function handleEvent(component: Component) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const props: Record<string, any> = {};
+
+    componentConfig[component.name].events?.forEach((event) => {
+      const eventConfig = component.props[event.name];
+
+      if (eventConfig) {
+        const { type } = eventConfig;
+
+        props[event.name] = () => {
+          if (type === 'goToLink' && eventConfig.url) {
+            window.location.href = eventConfig.url;
+          } else if (type === 'showMessage' && eventConfig.config) {
+            if (eventConfig.config.type === 'success') {
+              message.success(eventConfig.config.text);
+            } else if (eventConfig.config.type === 'error') {
+              message.error(eventConfig.config.text);
+            }
+          }
+        };
+      }
+    });
+
+    return props;
+  }
 
   function renderComponents(components: Component[]): React.ReactNode {
     return components.map((component: Component) => {
@@ -23,6 +51,7 @@ export function Preview() {
           styles: component.styles,
           ...config.defaultProps,
           ...(component?.props || {}),
+          ...handleEvent(component),
         },
         renderComponents(component.children || [])
       );
