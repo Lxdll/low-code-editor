@@ -2,14 +2,7 @@ import { create } from 'zustand';
 import Container from '../materials/Container';
 import Button from '../materials/Button';
 import Page from '@/materials/Page';
-
-export interface ComponentConfig {
-  name: string;
-  defaultProps: Record<string, unknown>;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  component: any;
-  desc: string;
-}
+import { ComponentConfig } from '@/types';
 
 interface State {
   componentConfig: { [key: string]: ComponentConfig };
@@ -35,6 +28,34 @@ export const useComponentConfigStore = create<State & Action>((set) => ({
       },
       component: Button,
       desc: '按钮',
+      setter: [
+        {
+          name: 'type',
+          label: '按钮类型',
+          type: 'select',
+          options: [
+            { label: '主按钮', value: 'primary' },
+            { label: '次按钮', value: 'default' },
+          ],
+        },
+        {
+          name: 'text',
+          label: '文本',
+          type: 'input',
+        },
+      ],
+      stylesSetter: [
+        {
+          name: 'width',
+          label: '宽度',
+          type: 'inputNumber',
+        },
+        {
+          name: 'height',
+          label: '高度',
+          type: 'inputNumber',
+        },
+      ],
     },
     Page: {
       name: 'Page',

@@ -3,7 +3,7 @@
  * MaterialsItem
  */
 
-import { ComponentConfig } from '@/store/component-config';
+import { ComponentConfig } from '@/types';
 import { useDrag } from 'react-dnd';
 
 interface MaterialsItemProps {

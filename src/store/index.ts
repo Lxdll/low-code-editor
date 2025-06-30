@@ -1,3 +1,4 @@
+import { CSSProperties } from 'react';
 import { create } from 'zustand';
 
 export interface Component {
@@ -7,6 +8,7 @@ export interface Component {
   parentId?: number;
   props: unknown;
   desc: string;
+  styles?: CSSProperties;
 }
 
 type State = {
@@ -19,8 +21,13 @@ type Action = {
   deleteComponent: (id: number) => void;
   updateComponentProps: (id: number, props: unknown) => void;
   setCurrentComponentId: (componentId: number | undefined) => void;
+  updateComponentStyles: (
+    componentId: number,
+    styles: CSSProperties,
+    replace?: boolean
+  ) => void;
 };
-export const useComponentStore = create<State & Action>((set, get) => ({
+export const useComponentStore = create<State & Action>((set) => ({
   list: [
     {
       id: 1,
@@ -90,7 +97,8 @@ export const useComponentStore = create<State & Action>((set, get) => ({
     }),
   updateComponentProps: (id: number, props: unknown) => {
     set((state) => {
-      const comp = getComponentById(id, get().list);
+      const newList = state.list;
+      const comp = getComponentById(id, newList);
 
       if (comp) {
         comp.props = {
@@ -99,7 +107,7 @@ export const useComponentStore = create<State & Action>((set, get) => ({
         };
       }
 
-      return { list: [...state.list] };
+      return { list: [...newList] };
     });
   },
   setCurrentComponentId: (componentId: number | undefined) => {
@@ -108,6 +116,19 @@ export const useComponentStore = create<State & Action>((set, get) => ({
       currentComponent: getComponentById(componentId, state.list),
     }));
   },
+  updateComponentStyles: (componentId, styles, replace) =>
+    set((state) => {
+      const component = getComponentById(componentId, state.list);
+      if (component) {
+        component.styles = replace
+          ? { ...styles }
+          : { ...component.styles, ...styles };
+
+        return { list: [...state.list] };
+      }
+
+      return { list: [...state.list] };
+    }),
 }));
 
 export const getComponentById = (

@@ -3,7 +3,7 @@ import 'allotment/dist/style.css';
 import Header from './components/Header';
 import Materials from './components/Materials';
 import Canvas from './components/Canvas';
-import Operation from './components/Operation';
+import Operation from './components/Operation/Operation';
 
 function App() {
   return (

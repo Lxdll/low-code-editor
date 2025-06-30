@@ -57,7 +57,8 @@ export default function Canvas() {
           id: item.id,
           name: item.name,
           ...defaultProps,
-          ...component.props,
+          ...(item.props || {}),
+          styles: item.styles,
         },
         renderComponents(item.children || [])
       );
