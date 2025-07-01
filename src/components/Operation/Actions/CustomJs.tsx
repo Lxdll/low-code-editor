@@ -1,11 +1,7 @@
 import { useEffect, useState } from 'react';
 import MonacoEditor, { OnMount } from '@monaco-editor/react';
 import { useComponentStore } from '@/store';
-
-export interface CustomJSConfig {
-  type: 'customJS';
-  code: string;
-}
+import { CustomJSConfig } from '@/types';
 
 export interface CustomJSProps {
   defaultValue?: string;

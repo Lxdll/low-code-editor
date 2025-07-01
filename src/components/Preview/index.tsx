@@ -1,10 +1,13 @@
 import { Component, useComponentStore } from '@/store';
 import { useComponentConfigStore } from '@/store/component-config';
-import React from 'react';
+import React, { useRef } from 'react';
 import { message } from 'antd';
-import { ActionConfig } from '../Operation/ActionModal';
+import { ActionConfig } from '@/types';
 
 export function Preview() {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const componentRefs = useRef<Record<string, any>>({});
+
   const { list } = useComponentStore();
   const { componentConfig } = useComponentConfigStore();
 
@@ -35,6 +38,13 @@ export function Preview() {
                   message.success(content);
                 },
               });
+            } else if (action.type === 'componentMethod') {
+              const component =
+                componentRefs.current[action.config.componentId];
+
+              if (component) {
+                component[action.config.method]?.();
+              }
             }
           });
         };
@@ -58,6 +68,13 @@ export function Preview() {
           id: component.id,
           name: component.name,
           styles: component.styles,
+          ref:
+            component.name === 'Modal'
+              ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                (ref: Record<string, any>) => {
+                  componentRefs.current[component.id] = ref;
+                }
+              : null,
           ...config.defaultProps,
           ...(component?.props || {}),
           ...handleEvent(component),

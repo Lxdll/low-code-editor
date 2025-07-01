@@ -1,14 +1,7 @@
 import { Input, Select } from 'antd';
 import { useComponentStore } from '@/store';
 import { useEffect, useState } from 'react';
-
-export interface ShowMessageConfig {
-  type: 'showMessage';
-  config: {
-    type: 'success' | 'error';
-    text: string;
-  };
-}
+import { ShowMessageConfig } from '@/types';
 
 interface ShowMessageProps {
   value?: ShowMessageConfig['config'];

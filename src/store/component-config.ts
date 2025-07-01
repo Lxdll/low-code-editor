@@ -104,6 +104,16 @@ export const useComponentConfigStore = create<State & Action>((set) => ({
           label: '取消事件',
         },
       ],
+      methods: [
+        {
+          name: 'open',
+          label: '打开弹窗',
+        },
+        {
+          name: 'close',
+          label: '关闭弹窗',
+        },
+      ],
       desc: '弹窗',
       dev: ModalDev,
       prod: ModalProd,

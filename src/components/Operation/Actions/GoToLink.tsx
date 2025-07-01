@@ -1,11 +1,7 @@
 import { useComponentStore } from '@/store';
+import { GoToLinkConfig } from '@/types';
 import TextArea from 'antd/es/input/TextArea';
 import { useEffect, useState } from 'react';
-
-export interface GoToLinkConfig {
-  type: 'goToLink';
-  url: string;
-}
 
 interface Props {
   value?: string;

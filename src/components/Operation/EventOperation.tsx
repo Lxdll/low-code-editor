@@ -1,13 +1,10 @@
-import { useComponentStore } from '@/store';
+import { getComponentById, useComponentStore } from '@/store';
 import { useComponentConfigStore } from '@/store/component-config';
 import { Collapse, CollapseProps, Button } from 'antd';
 import { useState } from 'react';
-import { ComponentEvent } from '@/types';
-import { ActionConfig, ActionModal } from './ActionModal';
-import { GoToLinkConfig } from './Actions/GoToLink';
-import { ShowMessageConfig } from './Actions/ShowMessage';
+import { ActionConfig, ComponentEvent } from '@/types';
+import { ActionModal } from './ActionModal';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { CustomJSConfig } from './Actions/CustomJs';
 
 export default function EventOperation() {
   const [actionModalOpen, setActionModalOpen] = useState(false);
@@ -17,7 +14,7 @@ export default function EventOperation() {
   const [currentActionConfigIndex, setCurrentActionConfigIndex] =
     useState<number>();
 
-  const { currentComponent, updateComponentProps } = useComponentStore();
+  const { currentComponent, updateComponentProps, list } = useComponentStore();
   const { componentConfig } = useComponentConfigStore();
 
   if (!currentComponent) return null;
@@ -38,9 +35,7 @@ export default function EventOperation() {
     });
   }
 
-  const handleModalOk = (
-    config?: GoToLinkConfig | ShowMessageConfig | CustomJSConfig
-  ) => {
+  const handleModalOk = (config?: ActionConfig) => {
     if (!config || !currentEvent || !currentComponent) {
       return;
     }
@@ -155,6 +150,41 @@ export default function EventOperation() {
                         <EditOutlined />
                       </div>
 
+                      <div
+                        style={{
+                          position: 'absolute',
+                          top: 10,
+                          right: 10,
+                          cursor: 'pointer',
+                        }}
+                        onClick={() => deleteAction(event, index)}
+                      >
+                        <DeleteOutlined />
+                      </div>
+                    </div>
+                  ) : null}
+                  {item.type === 'componentMethod' ? (
+                    <div
+                      key="componentMethod"
+                      className="relative m-[10px] border border-[#aaa] p-[10px]"
+                    >
+                      <div className="text-[blue]">组件方法</div>
+                      <div>
+                        {getComponentById(item.config.componentId, list)?.desc}
+                      </div>
+                      <div>{item.config.componentId}</div>
+                      <div>{item.config.method}</div>
+                      <div
+                        style={{
+                          position: 'absolute',
+                          top: 10,
+                          right: 30,
+                          cursor: 'pointer',
+                        }}
+                        onClick={() => editAction(item, index)}
+                      >
+                        <EditOutlined />
+                      </div>
                       <div
                         style={{
                           position: 'absolute',
