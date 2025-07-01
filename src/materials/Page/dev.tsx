@@ -7,7 +7,10 @@ import { CommonComponentProps } from '@/types';
 import { useMaterialsDrop } from '@/hooks/useMaterialsDrop';
 
 export default function Page({ id, styles, children }: CommonComponentProps) {
-  const { canDrop, drop } = useMaterialsDrop(['Button', 'Container'], id);
+  const { canDrop, drop } = useMaterialsDrop(
+    ['Button', 'Container', 'Modal'],
+    id
+  );
 
   return (
     <div
