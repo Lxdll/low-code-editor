@@ -2,8 +2,7 @@ import { Component, useComponentStore } from '@/store';
 import { useComponentConfigStore } from '@/store/component-config';
 import React from 'react';
 import { message } from 'antd';
-import { GoToLinkConfig } from '../Operation/Actions/GoToLink';
-import { ShowMessageConfig } from '../Operation/Actions/ShowMessage';
+import { ActionConfig } from '../Operation/ActionModal';
 
 export function Preview() {
   const { list } = useComponentStore();
@@ -18,19 +17,26 @@ export function Preview() {
 
       if (eventConfig) {
         props[event.name] = () => {
-          eventConfig?.actions?.forEach(
-            (action: GoToLinkConfig | ShowMessageConfig) => {
-              if (action.type === 'goToLink') {
-                window.location.href = action.url;
-              } else if (action.type === 'showMessage') {
-                if (action.config.type === 'success') {
-                  message.success(action.config.text);
-                } else if (action.config.type === 'error') {
-                  message.error(action.config.text);
-                }
+          eventConfig?.actions?.forEach((action: ActionConfig) => {
+            if (action.type === 'goToLink') {
+              window.location.href = action.url;
+            } else if (action.type === 'showMessage') {
+              if (action.config.type === 'success') {
+                message.success(action.config.text);
+              } else if (action.config.type === 'error') {
+                message.error(action.config.text);
               }
+            } else if (action.type === 'customJS') {
+              const func = new Function('context', action.code);
+              func({
+                name: component.name,
+                props: component.props,
+                showMessage(content: string) {
+                  message.success(content);
+                },
+              });
             }
-          );
+          });
         };
       }
     });

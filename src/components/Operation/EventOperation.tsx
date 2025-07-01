@@ -3,14 +3,19 @@ import { useComponentConfigStore } from '@/store/component-config';
 import { Collapse, CollapseProps, Button } from 'antd';
 import { useState } from 'react';
 import { ComponentEvent } from '@/types';
-import { ActionModal } from './ActionModal';
+import { ActionConfig, ActionModal } from './ActionModal';
 import { GoToLinkConfig } from './Actions/GoToLink';
 import { ShowMessageConfig } from './Actions/ShowMessage';
-import { DeleteOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { CustomJSConfig } from './Actions/CustomJs';
 
 export default function EventOperation() {
   const [actionModalOpen, setActionModalOpen] = useState(false);
   const [currentEvent, setCurrentEvent] = useState<ComponentEvent>();
+  const [currentActionConfig, setCurrentActionConfig] =
+    useState<ActionConfig>();
+  const [currentActionConfigIndex, setCurrentActionConfigIndex] =
+    useState<number>();
 
   const { currentComponent, updateComponentProps } = useComponentStore();
   const { componentConfig } = useComponentConfigStore();
@@ -33,22 +38,49 @@ export default function EventOperation() {
     });
   }
 
-  const handleModalOk = (config?: GoToLinkConfig | ShowMessageConfig) => {
+  const handleModalOk = (
+    config?: GoToLinkConfig | ShowMessageConfig | CustomJSConfig
+  ) => {
     if (!config || !currentEvent || !currentComponent) {
       return;
     }
 
-    updateComponentProps(currentComponent.id, {
-      [currentEvent.name]: {
-        actions: [
-          ...(currentComponent.props[currentEvent.name]?.actions || []),
-          config,
-        ],
-      },
-    });
+    if (currentActionConfig) {
+      updateComponentProps(currentComponent.id, {
+        [currentEvent.name]: {
+          actions: currentComponent.props[currentEvent.name]?.action.map(
+            (item: ActionConfig, index: number) => {
+              return index === currentActionConfigIndex ? config : item;
+            }
+          ),
+        },
+      });
+    } else {
+      updateComponentProps(currentComponent.id, {
+        [currentEvent.name]: {
+          actions: [
+            ...(currentComponent.props[currentEvent.name]?.actions || []),
+            config,
+          ],
+        },
+      });
+    }
+
+    setCurrentActionConfig(undefined);
 
     setActionModalOpen(false);
   };
+
+  function editAction(actionConfig: ActionConfig, index: number) {
+    if (!currentComponent) {
+      return;
+    }
+
+    setCurrentActionConfigIndex(index);
+    setCurrentActionConfig(actionConfig);
+
+    setActionModalOpen(true);
+  }
 
   const items: CollapseProps['items'] = (
     componentConfig[currentComponent.name].events || []
@@ -74,13 +106,25 @@ export default function EventOperation() {
       children: (
         <div>
           {(currentComponent.props[event.name]?.actions || []).map(
-            (item: GoToLinkConfig | ShowMessageConfig, index: number) => {
+            (item: ActionConfig, index: number) => {
               return (
                 <div key={index}>
                   {item.type === 'goToLink' ? (
                     <div className="relative m-[10px] border border-[#aaa] p-[10px]">
                       <div className="text-[blue]">跳转链接</div>
                       <div>{item.url}</div>
+                      <div
+                        style={{
+                          position: 'absolute',
+                          top: 10,
+                          right: 30,
+                          cursor: 'pointer',
+                        }}
+                        onClick={() => editAction(item, index)}
+                      >
+                        <EditOutlined />
+                      </div>
+
                       <div
                         style={{
                           position: 'absolute',
@@ -99,6 +143,47 @@ export default function EventOperation() {
                       <div className="text-[blue]">消息弹窗</div>
                       <div>{item.config.type}</div>
                       <div>{item.config.text}</div>
+                      <div
+                        style={{
+                          position: 'absolute',
+                          top: 10,
+                          right: 30,
+                          cursor: 'pointer',
+                        }}
+                        onClick={() => editAction(item, index)}
+                      >
+                        <EditOutlined />
+                      </div>
+
+                      <div
+                        style={{
+                          position: 'absolute',
+                          top: 10,
+                          right: 10,
+                          cursor: 'pointer',
+                        }}
+                        onClick={() => deleteAction(event, index)}
+                      >
+                        <DeleteOutlined />
+                      </div>
+                    </div>
+                  ) : null}
+
+                  {item.type === 'customJS' ? (
+                    <div className="relative m-[10px] border border-[#aaa] p-[10px]">
+                      <div className="text-[blue]">自定义JS</div>
+                      <div
+                        style={{
+                          position: 'absolute',
+                          top: 10,
+                          right: 30,
+                          cursor: 'pointer',
+                        }}
+                        onClick={() => editAction(item, index)}
+                      >
+                        <EditOutlined />
+                      </div>
+
                       <div
                         style={{
                           position: 'absolute',
@@ -133,6 +218,7 @@ export default function EventOperation() {
 
       <ActionModal
         visible={actionModalOpen}
+        actionConfig={currentActionConfig}
         handleOk={handleModalOk}
         handleCancel={() => {
           setActionModalOpen(false);
