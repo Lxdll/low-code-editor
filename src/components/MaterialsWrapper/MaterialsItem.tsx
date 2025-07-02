@@ -17,6 +17,7 @@ export default function MaterialsItem({ item }: MaterialsItemProps) {
     type: name,
     item: {
       type: name,
+      dragType: 'add',
     },
   });
 

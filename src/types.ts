@@ -75,3 +75,9 @@ export interface ComponentMethodConfig {
     method: string;
   };
 }
+
+export interface DropItemType {
+  type: string;
+  dragType?: 'move' | 'add';
+  id: number;
+}

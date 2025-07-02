@@ -1,6 +1,7 @@
 import { CommonComponentProps } from '@/types';
 import { Button as AntdButton } from 'antd';
 import { ButtonType } from 'antd/es/button';
+import { useDrag } from 'react-dnd';
 
 export interface ButtonProps extends CommonComponentProps {
   type: ButtonType;
@@ -8,8 +9,17 @@ export interface ButtonProps extends CommonComponentProps {
 }
 
 const Button = ({ id, type, styles, text }: ButtonProps) => {
+  const [, drag] = useDrag({
+    type: 'Button',
+    item: {
+      type: 'Button',
+      dragType: 'move',
+      id,
+    },
+  });
+
   return (
-    <AntdButton data-component-id={id} type={type} style={styles}>
+    <AntdButton ref={drag} data-component-id={id} type={type} style={styles}>
       {text}
     </AntdButton>
   );
