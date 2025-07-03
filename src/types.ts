@@ -18,6 +18,8 @@ export interface ComponentSetter {
 
 export interface ComponentConfig {
   name: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  getDefaultProps?: () => Record<string, any>;
   defaultProps: Record<string, unknown>;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   // component: any;

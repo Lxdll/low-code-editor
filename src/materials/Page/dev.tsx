@@ -8,7 +8,7 @@ import { useMaterialsDrop } from '@/hooks/useMaterialsDrop';
 
 export default function Page({ id, styles, children }: CommonComponentProps) {
   const { canDrop, drop } = useMaterialsDrop(
-    ['Button', 'Container', 'Modal', 'Table'],
+    ['Button', 'Container', 'Modal', 'Table', 'Form'],
     id
   );
 

@@ -19,7 +19,8 @@ export function Preview() {
       const eventConfig = component.props[event.name];
 
       if (eventConfig) {
-        props[event.name] = () => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        props[event.name] = (...args: any[]) => {
           eventConfig?.actions?.forEach((action: ActionConfig) => {
             if (action.type === 'goToLink') {
               window.location.href = action.url;
@@ -30,20 +31,23 @@ export function Preview() {
                 message.error(action.config.text);
               }
             } else if (action.type === 'customJS') {
-              const func = new Function('context', action.code);
-              func({
-                name: component.name,
-                props: component.props,
-                showMessage(content: string) {
-                  message.success(content);
+              const func = new Function('context', 'args', action.code);
+              func(
+                {
+                  name: component.name,
+                  props: component.props,
+                  showMessage(content: string) {
+                    message.success(content);
+                  },
                 },
-              });
+                args
+              );
             } else if (action.type === 'componentMethod') {
               const component =
                 componentRefs.current[action.config.componentId];
 
               if (component) {
-                component[action.config.method]?.();
+                component[action.config.method]?.(...args);
               }
             }
           });
@@ -68,13 +72,12 @@ export function Preview() {
           id: component.id,
           name: component.name,
           styles: component.styles,
-          ref:
-            component.name === 'Modal'
-              ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                (ref: Record<string, any>) => {
-                  componentRefs.current[component.id] = ref;
-                }
-              : null,
+          ref: ['Modal', 'Form', 'FormItem'].includes(component.name)
+            ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              (ref: Record<string, any>) => {
+                componentRefs.current[component.id] = ref;
+              }
+            : null,
           ...config.defaultProps,
           ...(component?.props || {}),
           ...handleEvent(component),

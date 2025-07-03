@@ -13,7 +13,11 @@ export function useMaterialsDrop(accept: string[], id: number) {
       const didDrop = monitor.didDrop();
       if (didDrop) return;
 
-      const { defaultProps, desc } = componentConfig[item.type];
+      const {
+        defaultProps: originDefaultProps,
+        desc,
+        getDefaultProps,
+      } = componentConfig[item.type];
       const { id: itemId, dragType } = item;
 
       // 移动
@@ -28,6 +32,11 @@ export function useMaterialsDrop(accept: string[], id: number) {
 
       // 新增
       if (dragType === 'add') {
+        const defaultProps = {
+          ...(originDefaultProps || {}),
+          ...(getDefaultProps?.() || {}),
+        };
+
         addComponent(
           {
             id: new Date().getTime(),

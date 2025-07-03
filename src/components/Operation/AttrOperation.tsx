@@ -16,9 +16,9 @@ export default function AttrOperation() {
   const { componentConfig } = useComponentConfigStore();
 
   useEffect(() => {
-    const data = form.getFieldsValue();
-    form.setFieldsValue({ ...data, ...(currentComponent?.props || {}) });
-  }, [currentComponent]);
+    form.resetFields();
+    form.setFieldsValue({ ...(currentComponent?.props || {}) });
+  }, [currentComponent, form]);
 
   if (!currentComponentId || !currentComponent) return null;
 
