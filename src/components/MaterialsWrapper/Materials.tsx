@@ -15,7 +15,7 @@ export default function Materials() {
   }, [componentConfig]);
 
   return (
-    <div>
+    <div className="flex flex-wrap gap-4 px-2">
       {components.map((item, index) => (
         <MaterialsItem key={index} item={item} />
       ))}

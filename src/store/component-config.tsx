@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import ContainerDev from '../materials/Container/dev';
-import ContainerProd from '../materials//Container/prod';
+import ContainerProd from '../materials/Container/prod';
 import ButtonDev from '../materials/Button/dev';
 import ButtonProd from '../materials/Button/prod';
 import PageDev from '@/materials/Page/dev';
@@ -16,6 +16,16 @@ import FormProd from '@/materials/Form/prod';
 import FormItemDev from '@/materials/FormItem/dev';
 import FormItemProd from '@/materials/FormItem/prod';
 import { ComponentConfig } from '@/types';
+import {
+  BorderlessTableOutlined,
+  BorderOutlined,
+  CopyOutlined,
+  DatabaseOutlined,
+  FileOutlined,
+  PicCenterOutlined,
+  ProfileOutlined,
+  TableOutlined,
+} from '@ant-design/icons';
 
 interface State {
   componentConfig: { [key: string]: ComponentConfig };
@@ -33,13 +43,18 @@ export const useComponentConfigStore = create<State & Action>((set) => ({
       dev: ContainerDev,
       prod: ContainerProd,
       desc: '容器',
+      hoverTips: '一个简单的容器，可以将多个渲染器放置在一起',
+      icon: <BorderOutlined />,
     },
     Button: {
       name: 'Button',
+      icon: <CopyOutlined />,
       defaultProps: {
         type: 'primary',
         text: '按钮',
       },
+      hoverTips:
+        '用来展示一个按钮，你可以配置不同的展示样式，配置不同的点击行为',
       dev: ButtonDev,
       prod: ButtonProd,
       desc: '按钮',
@@ -84,6 +99,7 @@ export const useComponentConfigStore = create<State & Action>((set) => ({
     },
     Page: {
       name: 'Page',
+      icon: <DatabaseOutlined />,
       defaultProps: {},
       dev: PageDev,
       prod: PageProd,
@@ -91,9 +107,11 @@ export const useComponentConfigStore = create<State & Action>((set) => ({
     },
     Modal: {
       name: 'Modal',
+      icon: <FileOutlined />,
       defaultProps: {
         title: '弹窗',
       },
+      hoverTips: '用来展示一个弹窗，你可以配置标题和内容。',
       setter: [
         {
           name: 'title',
@@ -128,8 +146,10 @@ export const useComponentConfigStore = create<State & Action>((set) => ({
     },
     Table: {
       name: 'Table',
+      icon: <TableOutlined />,
       defaultProps: {},
       desc: '表格',
+      hoverTips: '用来展示表格数据，可以配置列信息。',
       setter: [
         {
           name: 'url',
@@ -142,6 +162,7 @@ export const useComponentConfigStore = create<State & Action>((set) => ({
     },
     TableColumn: {
       name: 'TableColumn',
+      icon: <BorderlessTableOutlined />,
       desc: '表格列',
       defaultProps: {
         dataIndex: `col_${new Date().getTime()}`,
@@ -179,8 +200,10 @@ export const useComponentConfigStore = create<State & Action>((set) => ({
     },
     Form: {
       name: 'Form',
+      icon: <ProfileOutlined />,
       defaultProps: {},
       desc: '表单',
+      hoverTips: '用来收集用户输入的数据，可以配置表单项。',
       setter: [
         {
           name: 'title',
@@ -205,6 +228,7 @@ export const useComponentConfigStore = create<State & Action>((set) => ({
     },
     FormItem: {
       name: 'FormItem',
+      icon: <PicCenterOutlined />,
       desc: '表单项',
       getDefaultProps: () => {
         return {

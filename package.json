@@ -23,6 +23,7 @@
     "zustand": "^4.5.2"
   },
   "devDependencies": {
+    "@ant-design/icons": "^6.0.0",
     "@types/lodash-es": "^4.17.12",
     "@types/node": "^22.7.5",
     "@types/react": "^18.2.66",

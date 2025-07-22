@@ -16,7 +16,7 @@ function App() {
 
       {mode === 'edit' ? (
         <Allotment>
-          <Allotment.Pane preferredSize={240} maxSize={500} minSize={200}>
+          <Allotment.Pane preferredSize={350} minSize={300} maxSize={500}>
             <MaterialWrapper />
           </Allotment.Pane>
 

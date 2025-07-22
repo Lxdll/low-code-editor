@@ -1,6 +1,6 @@
 /**
  * @author: luxudongg@gmail.com
- * description
+ * 大纲
  */
 
 import { useComponentStore } from '@/store';
@@ -11,6 +11,7 @@ export default function Outline() {
 
   return (
     <Tree
+      className="h-full w-full"
       fieldNames={{ title: 'desc', key: 'id' }}
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       treeData={list as any}

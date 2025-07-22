@@ -18,12 +18,15 @@ export interface ComponentSetter {
 
 export interface ComponentConfig {
   name: string;
+  icon: React.ReactNode;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   getDefaultProps?: () => Record<string, any>;
   defaultProps: Record<string, unknown>;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   // component: any;
   desc: string;
+  /** 鼠标悬浮上去展示的信息 */
+  hoverTips?: React.ReactNode;
   setter?: ComponentSetter[];
   stylesSetter?: ComponentSetter[];
   events?: ComponentEvent[];

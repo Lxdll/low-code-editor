@@ -1,6 +1,6 @@
 /**
  * @author: luxudongg@gmail.com
- * description
+ * 代码编辑器
  */
 
 import { useComponentStore } from '@/store';
@@ -17,14 +17,15 @@ export default function Source() {
 
   return (
     <MonacoEditor
-      height={'100%'}
+      height="calc(100vh - 60px)"
       path="components.json"
       language="json"
       onMount={handleEditorMount}
       value={JSON.stringify(list, null, 2)}
       options={{
-        fontSize: 14,
+        fontSize: 10,
         scrollBeyondLastLine: false,
+        lineNumbers: 'off',
         minimap: {
           enabled: false,
         },

@@ -3,35 +3,44 @@
  * 侧边栏
  */
 
-import { Segmented } from 'antd';
-import { useState } from 'react';
+import { Tabs, TabsProps } from 'antd';
 import Material from './Materials';
 import Outline from './Outline';
 import { SideTabEnum } from '@/enum';
 import Source from './Source';
 
 export function MaterialWrapper() {
-  const [sideTabKey, setSideTabKey] = useState<SideTabEnum>(
-    SideTabEnum.MATERIALS
-  );
+  const items: TabsProps['items'] = [
+    {
+      key: SideTabEnum.MATERIALS,
+      label: SideTabEnum.MATERIALS,
+      style: { padding: '1rem 0.5rem' },
+
+      children: <Material />,
+    },
+    {
+      key: SideTabEnum.OUTLINE,
+      label: SideTabEnum.OUTLINE,
+      style: { padding: '1rem 0.5rem' },
+
+      children: <Outline />,
+    },
+    {
+      key: SideTabEnum.SOURCE,
+      label: SideTabEnum.SOURCE,
+      style: {
+        padding: '1rem 0.5rem',
+      },
+      children: <Source />,
+    },
+  ];
 
   return (
-    <div className="h-full">
-      <Segmented
-        value={sideTabKey}
-        onChange={setSideTabKey}
-        block
-        options={[
-          SideTabEnum.MATERIALS,
-          SideTabEnum.OUTLINE,
-          SideTabEnum.SOURCE,
-        ]}
-      />
-      <div className="h-full pt-[20px]">
-        {sideTabKey === SideTabEnum.MATERIALS && <Material />}
-        {sideTabKey === SideTabEnum.OUTLINE && <Outline />}
-        {sideTabKey === SideTabEnum.SOURCE && <Source />}
-      </div>
-    </div>
+    <Tabs
+      tabPosition="left"
+      tabBarStyle={{ paddingTop: 20 }}
+      items={items}
+      className="h-full overflow-hidden"
+    />
   );
 }

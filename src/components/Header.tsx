@@ -4,13 +4,28 @@
  */
 
 import { useComponentStore } from '@/store';
-import { Button, Space } from 'antd';
+import { GithubOutlined } from '@ant-design/icons';
+import { Button, Space, Tag } from 'antd';
 
 export default function Header() {
   const { mode, setMode, setCurrentComponentId } = useComponentStore();
   return (
-    <div className="flex h-16 items-center justify-between border-b-[1px] border-[#ccc] bg-blue-50 px-8">
-      低代码编辑器
+    <div className="flex h-16 items-center justify-between border-b-[0.5px] border-[#ccc] px-8">
+      <div>
+        低代码编辑器
+        <Tag
+          icon={<GithubOutlined />}
+          className="ml-1 cursor-pointer border-none"
+        >
+          <span
+            className="hover:text-[#ccc]"
+            onClick={() => window.open('https://github.com/Lxdll')}
+          >
+            @Lxdll
+          </span>
+        </Tag>
+      </div>
+
       <Space>
         {mode === 'edit' && (
           <Button
@@ -19,6 +34,7 @@ export default function Header() {
               setCurrentComponentId(undefined);
             }}
             type="primary"
+            className="text-xs"
           >
             预览
           </Button>
@@ -29,6 +45,7 @@ export default function Header() {
               setMode('edit');
             }}
             type="primary"
+            className="text-xs"
           >
             退出预览
           </Button>
