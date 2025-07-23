@@ -55,7 +55,7 @@ export default function StyleOperation() {
       return <Select options={options} />;
     } else if (type === 'input') {
       return <Input />;
-    } else if (type === 'inputNumber') {
+    } else if (type === 'input-number') {
       return <InputNumber />;
     }
   }
