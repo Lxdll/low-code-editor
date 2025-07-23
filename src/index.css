@@ -6,3 +6,12 @@
   overflow: scroll;
   scrollbar-width: none;
 }
+
+.ant-tabs-tab {
+  flex-grow: 1;
+  justify-content: center;
+}
+
+.ant-tabs-nav-list {
+  width: 100%;
+}

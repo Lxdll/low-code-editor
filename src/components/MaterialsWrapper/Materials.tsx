@@ -3,16 +3,16 @@
  * 组件材料区
  */
 
-import { useComponentConfigStore } from '@/store/component-config';
+import ComponentConfigMap from '@/component-config';
 import { useMemo } from 'react';
 import MaterialsItem from './MaterialsItem';
 
 export default function Materials() {
-  const { componentConfig } = useComponentConfigStore();
-
-  const components = useMemo(() => {
-    return Object.values(componentConfig).filter((i) => i.name !== 'Page');
-  }, [componentConfig]);
+  const components = useMemo(
+    () =>
+      Array.from(ComponentConfigMap.values()).filter((i) => i.name !== 'Page'),
+    [ComponentConfigMap]
+  );
 
   return (
     <div className="flex flex-wrap gap-4 px-2">

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Select, TreeSelect } from 'antd';
 import { Component, getComponentById, useComponentStore } from '@/store';
-import { useComponentConfigStore } from '@/store/component-config';
+import ComponentConfigMap from '@/component-config';
 import { ComponentMethodConfig } from '@/types';
 
 export interface ComponentMethodProps {
@@ -12,13 +12,13 @@ export interface ComponentMethodProps {
 export function ComponentMethod(props: ComponentMethodProps) {
   const { value, onChange } = props;
   const { list, currentComponentId } = useComponentStore();
-  const { componentConfig } = useComponentConfigStore();
   const [selectedComponent, setSelectedComponent] =
     useState<Component | null>();
 
   const [curId, setCurId] = useState<number>();
   const [curMethod, setCurMethod] = useState<string>();
 
+  const componentConfig = ComponentConfigMap.get(selectedComponent?.name || '');
   useEffect(() => {
     if (value) {
       setCurId(value.componentId);
@@ -68,15 +68,13 @@ export function ComponentMethod(props: ComponentMethodProps) {
           />
         </div>
       </div>
-      {componentConfig[selectedComponent?.name || ''] && (
+      {componentConfig && (
         <div className="mt-[20px] flex items-center gap-[10px]">
           <div>方法：</div>
           <div>
             <Select
               style={{ width: 500, height: 50 }}
-              options={componentConfig[
-                selectedComponent?.name || ''
-              ].methods?.map((method) => ({
+              options={componentConfig.methods?.map((method) => ({
                 label: method.label,
                 value: method.name,
               }))}

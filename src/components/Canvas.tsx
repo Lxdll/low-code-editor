@@ -4,7 +4,7 @@
  */
 import React, { MouseEventHandler, useState } from 'react';
 import { Component, useComponentStore } from '@/store';
-import { useComponentConfigStore } from '@/store/component-config';
+import ComponentConfigMap from '@/component-config';
 import HoverMask from './HoverMask';
 import SelectedMask from './SelectedMask';
 
@@ -13,7 +13,6 @@ export default function Canvas() {
 
   const { list, currentComponentId, setCurrentComponentId } =
     useComponentStore();
-  const { componentConfig } = useComponentConfigStore();
 
   const handleMouseHover: MouseEventHandler = (e) => {
     const path = e.nativeEvent.composedPath();
@@ -45,7 +44,7 @@ export default function Canvas() {
 
   function renderComponents(list: Component[]): React.ReactNode {
     return list.map((item) => {
-      const config = componentConfig?.[item.name];
+      const config = ComponentConfigMap.get(item.name);
       if (!config?.dev) return;
 
       const { dev, defaultProps } = config;

@@ -36,7 +36,7 @@ export default function MaterialsItem({ item }: MaterialsItemProps) {
       <div className="flex w-full flex-1 items-center justify-between">
         <div className="flex flex-1 items-center overflow-hidden">
           {icon}
-          <Typography.Text className="ml-1" ellipsis>
+          <Typography.Text className="ml-2 text-xs text-[#5c5f66]" ellipsis>
             {desc}
           </Typography.Text>
         </div>

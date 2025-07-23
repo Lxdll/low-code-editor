@@ -31,36 +31,40 @@ type Action = {
     replace?: boolean
   ) => void;
 };
+
+const defaultComponentList: State['list'] = [
+  {
+    id: 1,
+    name: 'Page',
+    props: {},
+    desc: '页面',
+    children: [
+      {
+        id: 2,
+        name: 'Container',
+        props: {},
+        parentId: 1,
+        desc: '容器',
+        children: [
+          {
+            id: 3,
+            name: 'Button',
+            props: {
+              type: 'primary',
+              text: 'Hello World',
+            },
+            parentId: 2,
+            desc: '按钮',
+          },
+        ],
+      },
+    ],
+  },
+];
+
 export const useComponentStore = create<State & Action>((set) => ({
   mode: 'edit',
-  list: [
-    {
-      id: 1,
-      name: 'Page',
-      props: {},
-      desc: '页面',
-      children: [
-        {
-          id: 2,
-          name: 'Container',
-          props: {},
-          parentId: 1,
-          desc: '容器',
-          children: [
-            {
-              id: 3,
-              name: 'Button',
-              props: {
-                text: '无敌',
-              },
-              parentId: 2,
-              desc: '按钮',
-            },
-          ],
-        },
-      ],
-    },
-  ],
+  list: defaultComponentList,
   currentComponentId: undefined,
   currentComponent: null,
   setMode: (newMode: Mode) => {

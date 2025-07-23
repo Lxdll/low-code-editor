@@ -4,8 +4,7 @@
  */
 
 import { useComponentStore } from '@/store';
-import { Segmented } from 'antd';
-import { useState } from 'react';
+import { Tabs, TabsProps } from 'antd';
 import AttrOperation from './AttrOperation';
 import StyleOperation from './StyleOperation';
 import EventOperation from './EventOperation';
@@ -17,39 +16,34 @@ enum ActiveKeyEnum {
 }
 
 export default function Operation() {
-  const [activeKey, setActiveKey] = useState<ActiveKeyEnum>(ActiveKeyEnum.ATTR);
   const { currentComponentId } = useComponentStore();
 
   if (!currentComponentId) return null;
 
-  const renderSetter = () => {
-    let render = null;
-
-    switch (activeKey) {
-      case ActiveKeyEnum.ATTR:
-        render = <AttrOperation />;
-        break;
-      case ActiveKeyEnum.STYLE:
-        render = <StyleOperation />;
-        break;
-      case ActiveKeyEnum.EVENT:
-        render = <EventOperation />;
-        break;
-    }
-
-    return render;
-  };
+  const items: TabsProps['items'] = [
+    {
+      key: ActiveKeyEnum.ATTR,
+      label: ActiveKeyEnum.ATTR,
+      style: { padding: '0rem 1.5rem' },
+      children: <AttrOperation />,
+    },
+    {
+      key: ActiveKeyEnum.STYLE,
+      label: ActiveKeyEnum.STYLE,
+      style: { padding: '0rem 1.5rem' },
+      children: <StyleOperation />,
+    },
+    {
+      key: ActiveKeyEnum.EVENT,
+      label: ActiveKeyEnum.EVENT,
+      style: { padding: '0rem 1.5rem' },
+      children: <EventOperation />,
+    },
+  ];
 
   return (
     <div className="h-full overflow-y-scroll">
-      <Segmented
-        value={activeKey}
-        onChange={setActiveKey}
-        block
-        options={[ActiveKeyEnum.ATTR, ActiveKeyEnum.STYLE, ActiveKeyEnum.EVENT]}
-      />
-
-      <div className="pt-[20px]">{renderSetter()}</div>
+      <Tabs items={items} />
     </div>
   );
 }

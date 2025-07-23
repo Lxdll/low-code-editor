@@ -1,5 +1,5 @@
 import { getComponentById, useComponentStore } from '@/store';
-import { useComponentConfigStore } from '@/store/component-config';
+import ComponentConfigMap from '@/component-config';
 import { Collapse, CollapseProps, Button } from 'antd';
 import { useState } from 'react';
 import { ActionConfig, ComponentEvent } from '@/types';
@@ -15,7 +15,7 @@ export default function EventOperation() {
     useState<number>();
 
   const { currentComponent, updateComponentProps, list } = useComponentStore();
-  const { componentConfig } = useComponentConfigStore();
+  const componentConfig = ComponentConfigMap.get(currentComponent?.name || '');
 
   if (!currentComponent) return null;
 
@@ -77,173 +77,174 @@ export default function EventOperation() {
     setActionModalOpen(true);
   }
 
-  const items: CollapseProps['items'] = (
-    componentConfig[currentComponent.name].events || []
-  ).map((event) => {
-    return {
-      key: event.name,
-      label: (
-        <div className="flex justify-between leading-[30px]">
-          {event.label}
-          <Button
-            type="primary"
-            onClick={(e) => {
-              e.stopPropagation();
+  const items: CollapseProps['items'] = (componentConfig?.events || []).map(
+    (event) => {
+      return {
+        key: event.name,
+        label: (
+          <div className="flex justify-between leading-[30px]">
+            {event.label}
+            <Button
+              type="primary"
+              onClick={(e) => {
+                e.stopPropagation();
 
-              setCurrentEvent(event);
-              setActionModalOpen(true);
-            }}
-          >
-            添加动作
-          </Button>
-        </div>
-      ),
-      children: (
-        <div>
-          {(currentComponent.props[event.name]?.actions || []).map(
-            (item: ActionConfig, index: number) => {
-              return (
-                <div key={index}>
-                  {item.type === 'goToLink' ? (
-                    <div className="relative m-[10px] border border-[#aaa] p-[10px]">
-                      <div className="text-[blue]">跳转链接</div>
-                      <div>{item.url}</div>
-                      <div
-                        style={{
-                          position: 'absolute',
-                          top: 10,
-                          right: 30,
-                          cursor: 'pointer',
-                        }}
-                        onClick={() => editAction(item, index)}
-                      >
-                        <EditOutlined />
-                      </div>
+                setCurrentEvent(event);
+                setActionModalOpen(true);
+              }}
+            >
+              添加动作
+            </Button>
+          </div>
+        ),
+        children: (
+          <div>
+            {(currentComponent.props[event.name]?.actions || []).map(
+              (item: ActionConfig, index: number) => {
+                return (
+                  <div key={index}>
+                    {item.type === 'goToLink' ? (
+                      <div className="relative m-[10px] border border-[#aaa] p-[10px]">
+                        <div className="text-[blue]">跳转链接</div>
+                        <div>{item.url}</div>
+                        <div
+                          style={{
+                            position: 'absolute',
+                            top: 10,
+                            right: 30,
+                            cursor: 'pointer',
+                          }}
+                          onClick={() => editAction(item, index)}
+                        >
+                          <EditOutlined />
+                        </div>
 
-                      <div
-                        style={{
-                          position: 'absolute',
-                          top: 10,
-                          right: 10,
-                          cursor: 'pointer',
-                        }}
-                        onClick={() => deleteAction(event, index)}
-                      >
-                        <DeleteOutlined />
+                        <div
+                          style={{
+                            position: 'absolute',
+                            top: 10,
+                            right: 10,
+                            cursor: 'pointer',
+                          }}
+                          onClick={() => deleteAction(event, index)}
+                        >
+                          <DeleteOutlined />
+                        </div>
                       </div>
-                    </div>
-                  ) : null}
-                  {item.type === 'showMessage' ? (
-                    <div className="relative m-[10px] border border-[#aaa] p-[10px]">
-                      <div className="text-[blue]">消息弹窗</div>
-                      <div>{item.config.type}</div>
-                      <div>{item.config.text}</div>
-                      <div
-                        style={{
-                          position: 'absolute',
-                          top: 10,
-                          right: 30,
-                          cursor: 'pointer',
-                        }}
-                        onClick={() => editAction(item, index)}
-                      >
-                        <EditOutlined />
-                      </div>
+                    ) : null}
+                    {item.type === 'showMessage' ? (
+                      <div className="relative m-[10px] border border-[#aaa] p-[10px]">
+                        <div className="text-[blue]">消息弹窗</div>
+                        <div>{item.config.type}</div>
+                        <div>{item.config.text}</div>
+                        <div
+                          style={{
+                            position: 'absolute',
+                            top: 10,
+                            right: 30,
+                            cursor: 'pointer',
+                          }}
+                          onClick={() => editAction(item, index)}
+                        >
+                          <EditOutlined />
+                        </div>
 
+                        <div
+                          style={{
+                            position: 'absolute',
+                            top: 10,
+                            right: 10,
+                            cursor: 'pointer',
+                          }}
+                          onClick={() => deleteAction(event, index)}
+                        >
+                          <DeleteOutlined />
+                        </div>
+                      </div>
+                    ) : null}
+                    {item.type === 'componentMethod' ? (
                       <div
-                        style={{
-                          position: 'absolute',
-                          top: 10,
-                          right: 10,
-                          cursor: 'pointer',
-                        }}
-                        onClick={() => deleteAction(event, index)}
+                        key="componentMethod"
+                        className="relative m-[10px] border border-[#aaa] p-[10px]"
                       >
-                        <DeleteOutlined />
+                        <div className="text-[blue]">组件方法</div>
+                        <div>
+                          {
+                            getComponentById(item.config.componentId, list)
+                              ?.desc
+                          }
+                        </div>
+                        <div>{item.config.componentId}</div>
+                        <div>{item.config.method}</div>
+                        <div
+                          style={{
+                            position: 'absolute',
+                            top: 10,
+                            right: 30,
+                            cursor: 'pointer',
+                          }}
+                          onClick={() => editAction(item, index)}
+                        >
+                          <EditOutlined />
+                        </div>
+                        <div
+                          style={{
+                            position: 'absolute',
+                            top: 10,
+                            right: 10,
+                            cursor: 'pointer',
+                          }}
+                          onClick={() => deleteAction(event, index)}
+                        >
+                          <DeleteOutlined />
+                        </div>
                       </div>
-                    </div>
-                  ) : null}
-                  {item.type === 'componentMethod' ? (
-                    <div
-                      key="componentMethod"
-                      className="relative m-[10px] border border-[#aaa] p-[10px]"
-                    >
-                      <div className="text-[blue]">组件方法</div>
-                      <div>
-                        {getComponentById(item.config.componentId, list)?.desc}
-                      </div>
-                      <div>{item.config.componentId}</div>
-                      <div>{item.config.method}</div>
-                      <div
-                        style={{
-                          position: 'absolute',
-                          top: 10,
-                          right: 30,
-                          cursor: 'pointer',
-                        }}
-                        onClick={() => editAction(item, index)}
-                      >
-                        <EditOutlined />
-                      </div>
-                      <div
-                        style={{
-                          position: 'absolute',
-                          top: 10,
-                          right: 10,
-                          cursor: 'pointer',
-                        }}
-                        onClick={() => deleteAction(event, index)}
-                      >
-                        <DeleteOutlined />
-                      </div>
-                    </div>
-                  ) : null}
+                    ) : null}
 
-                  {item.type === 'customJS' ? (
-                    <div className="relative m-[10px] border border-[#aaa] p-[10px]">
-                      <div className="text-[blue]">自定义JS</div>
-                      <div
-                        style={{
-                          position: 'absolute',
-                          top: 10,
-                          right: 30,
-                          cursor: 'pointer',
-                        }}
-                        onClick={() => editAction(item, index)}
-                      >
-                        <EditOutlined />
-                      </div>
+                    {item.type === 'customJS' ? (
+                      <div className="relative m-[10px] border border-[#aaa] p-[10px]">
+                        <div className="text-[blue]">自定义JS</div>
+                        <div
+                          style={{
+                            position: 'absolute',
+                            top: 10,
+                            right: 30,
+                            cursor: 'pointer',
+                          }}
+                          onClick={() => editAction(item, index)}
+                        >
+                          <EditOutlined />
+                        </div>
 
-                      <div
-                        style={{
-                          position: 'absolute',
-                          top: 10,
-                          right: 10,
-                          cursor: 'pointer',
-                        }}
-                        onClick={() => deleteAction(event, index)}
-                      >
-                        <DeleteOutlined />
+                        <div
+                          style={{
+                            position: 'absolute',
+                            top: 10,
+                            right: 10,
+                            cursor: 'pointer',
+                          }}
+                          onClick={() => deleteAction(event, index)}
+                        >
+                          <DeleteOutlined />
+                        </div>
                       </div>
-                    </div>
-                  ) : null}
-                </div>
-              );
-            }
-          )}
-        </div>
-      ),
-    };
-  });
+                    ) : null}
+                  </div>
+                );
+              }
+            )}
+          </div>
+        ),
+      };
+    }
+  );
 
   return (
     <div className="px-[10px]">
       <Collapse
         className="mb-[10px]"
         items={items}
-        defaultActiveKey={componentConfig[currentComponent.name].events?.map(
-          (item) => item.name
-        )}
+        defaultActiveKey={componentConfig?.events?.map((item) => item.name)}
       />
 
       <ActionModal

@@ -1,5 +1,5 @@
 import { useComponentStore } from '@/store';
-import { useComponentConfigStore } from '@/store/component-config';
+import ComponentConfigMap from '@/component-config';
 import { ComponentSetter } from '@/types';
 import { Form, Input, InputNumber, Select } from 'antd';
 import { CSSProperties, useEffect, useState } from 'react';
@@ -14,7 +14,7 @@ export default function StyleOperation() {
 
   const { currentComponentId, currentComponent, updateComponentStyles } =
     useComponentStore();
-  const { componentConfig } = useComponentConfigStore();
+  const componentConfig = ComponentConfigMap.get(currentComponent?.name || '');
 
   useEffect(() => {
     form.resetFields();
@@ -98,7 +98,7 @@ export default function StyleOperation() {
       labelCol={{ span: 8 }}
       wrapperCol={{ span: 14 }}
     >
-      {componentConfig[currentComponent.name]?.stylesSetter?.map((setter) => (
+      {componentConfig?.stylesSetter?.map((setter) => (
         <Form.Item key={setter.name} name={setter.name} label={setter.label}>
           {renderFormElement(setter)}
         </Form.Item>

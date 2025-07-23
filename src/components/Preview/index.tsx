@@ -1,5 +1,5 @@
 import { Component, useComponentStore } from '@/store';
-import { useComponentConfigStore } from '@/store/component-config';
+import ComponentConfigMap from '@/component-config';
 import React, { useRef } from 'react';
 import { message } from 'antd';
 import { ActionConfig } from '@/types';
@@ -9,13 +9,13 @@ export function Preview() {
   const componentRefs = useRef<Record<string, any>>({});
 
   const { list } = useComponentStore();
-  const { componentConfig } = useComponentConfigStore();
 
   function handleEvent(component: Component) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const props: Record<string, any> = {};
 
-    componentConfig[component.name].events?.forEach((event) => {
+    const componentConfig = ComponentConfigMap.get(component.name);
+    componentConfig?.events?.forEach((event) => {
       const eventConfig = component.props[event.name];
 
       if (eventConfig) {
@@ -59,7 +59,7 @@ export function Preview() {
 
   function renderComponents(components: Component[]): React.ReactNode {
     return components.map((component: Component) => {
-      const config = componentConfig?.[component.name];
+      const config = ComponentConfigMap.get(component.name);
 
       if (!config?.prod) {
         return null;

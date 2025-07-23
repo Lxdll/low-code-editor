@@ -1,11 +1,10 @@
 import { getComponentById, useComponentStore } from '@/store';
-import { useComponentConfigStore } from '@/store/component-config';
+import ComponentConfigMap from '@/component-config';
 import { DropItemType } from '@/types';
 import { useDrop } from 'react-dnd';
 
 export function useMaterialsDrop(accept: string[], id: number) {
   const { addComponent, list, deleteComponent } = useComponentStore();
-  const { componentConfig } = useComponentConfigStore();
 
   const [{ canDrop }, drop] = useDrop(() => ({
     accept,
@@ -15,9 +14,9 @@ export function useMaterialsDrop(accept: string[], id: number) {
 
       const {
         defaultProps: originDefaultProps,
-        desc,
+        desc = '',
         getDefaultProps,
-      } = componentConfig[item.type];
+      } = ComponentConfigMap.get(item.type) || {};
       const { id: itemId, dragType } = item;
 
       // 移动
