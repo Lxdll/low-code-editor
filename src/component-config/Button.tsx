@@ -18,10 +18,10 @@ const ButtonConfig: ComponentConfig = {
     {
       name: 'type',
       label: '按钮类型',
-      type: 'select',
+      type: 'single-select',
       options: [
         { label: '主按钮', value: 'primary' },
-        { label: '次按钮', value: 'default' },
+        { label: '默认按钮', value: 'default' },
       ],
     },
     {
@@ -34,12 +34,12 @@ const ButtonConfig: ComponentConfig = {
     {
       name: 'width',
       label: '宽度',
-      type: 'inputNumber',
+      type: 'input-number',
     },
     {
       name: 'height',
       label: '高度',
-      type: 'inputNumber',
+      type: 'input-number',
     },
   ],
   events: [

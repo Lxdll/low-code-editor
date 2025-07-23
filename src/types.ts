@@ -11,9 +11,8 @@ export interface CommonComponentProps extends PropsWithChildren {
 export interface ComponentSetter {
   name: string;
   label: string;
-  type: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [key: string]: any;
+  type: SetterType;
+  options?: { label: string; value: string }[];
 }
 
 export interface ComponentConfig {
@@ -86,3 +85,10 @@ export interface DropItemType {
   dragType?: 'move' | 'add';
   id: number;
 }
+
+export type SetterType =
+  | 'input'
+  | 'single-select'
+  | 'select'
+  | 'input-number'
+  | 'underline-input';

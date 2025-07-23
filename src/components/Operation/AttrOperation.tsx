@@ -5,8 +5,8 @@
 import { useComponentStore } from '@/store';
 import ComponentConfigMap from '@/component-config';
 import { ComponentConfig, ComponentSetter } from '@/types';
-import { Col, Form, Input, Row, Select } from 'antd';
-import { useEffect, useMemo } from 'react';
+import { Col, Form, Input, Radio, Row, Select } from 'antd';
+import { ReactNode, useEffect, useMemo } from 'react';
 
 const LABEL_COL = 10;
 const VALUE_COL = 14;
@@ -34,12 +34,32 @@ export default function AttrOperation() {
 
   function renderFormElement(setting: ComponentSetter) {
     const { type, options } = setting;
+    let ele: ReactNode = null;
 
-    if (type === 'select') {
-      return <Select options={options} />;
-    } else if (type === 'input') {
-      return <Input />;
+    switch (type) {
+      case 'input':
+        ele = <Input size="small" autoComplete="off" />;
+        break;
+      case 'select':
+        ele = <Select options={options} />;
+        break;
+      case 'single-select':
+        ele = (
+          <Radio.Group buttonStyle="solid" size="small">
+            {options?.map((o) => (
+              <Radio.Button key={o.value} value={o.value}>
+                {o.label}
+              </Radio.Button>
+            ))}
+          </Radio.Group>
+        );
+        break;
+      case 'underline-input':
+        ele = <Input size="small" variant="underlined" autoComplete="off" />;
+        break;
     }
+
+    return ele;
   }
 
   const valueChange = (changeValues: ComponentConfig) => {
@@ -94,6 +114,7 @@ export default function AttrOperation() {
               label={renderLabel(setter.label)}
               labelCol={{ span: LABEL_COL }}
               labelAlign="left"
+              style={{ textAlign: 'right' }}
             >
               {renderFormElement(setter)}
             </Form.Item>

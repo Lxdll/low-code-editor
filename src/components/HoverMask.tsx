@@ -76,12 +76,11 @@ export default function HoverMask(props: HoverMaskProps) {
           left: position.left,
           top: position.top,
           backgroundColor: 'rgba(0, 0, 255, 0.05)',
-          border: '1px dashed blue',
+          border: '1px dashed #ccc',
           pointerEvents: 'none',
           width: position.width,
           height: position.height,
           zIndex: 12,
-          borderRadius: 4,
           boxSizing: 'border-box',
         }}
       />
@@ -99,11 +98,11 @@ export default function HoverMask(props: HoverMaskProps) {
         <div
           style={{
             padding: '0 8px',
-            backgroundColor: 'blue',
-            borderRadius: 4,
-            color: '#fff',
+            backgroundColor: '#ccc',
+            color: 'black',
             cursor: 'pointer',
             whiteSpace: 'nowrap',
+            // fontSize: '12px',
           }}
         >
           {curComponent?.desc}

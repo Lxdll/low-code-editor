@@ -109,6 +109,24 @@ function SelectedMask({
     return parentComponents;
   }, [currentComponent]);
 
+  const popupRender = () => {
+    return (
+      <div className="flex flex-col">
+        {parentComponents.map((c) => {
+          return (
+            <span
+              key={c.id}
+              className="inline-flex cursor-pointer items-center justify-center bg-[#325cd1] py-1 text-xs text-white hover:text-[#ccc]"
+              onClick={() => setCurrentComponentId(c.id)}
+            >
+              {c.desc}
+            </span>
+          );
+        })}
+      </div>
+    );
+  };
+
   return createPortal(
     <>
       <div
@@ -117,12 +135,11 @@ function SelectedMask({
           left: position.left,
           top: position.top,
           backgroundColor: 'rgba(0, 0, 255, 0.1)',
-          border: '1px dashed blue',
+          border: '1px dashed #325cd1',
           pointerEvents: 'none',
           width: position.width,
           height: position.height,
           zIndex: 12,
-          borderRadius: 4,
           boxSizing: 'border-box',
         }}
       />
@@ -137,24 +154,16 @@ function SelectedMask({
           transform: 'translate(-100%, -100%)',
         }}
       >
-        <Space>
+        <Space size={0}>
           <Dropdown
-            menu={{
-              items: parentComponents.map((item) => ({
-                key: item.id,
-                label: item.desc,
-              })),
-              onClick: ({ key }) => {
-                setCurrentComponentId(+key);
-              },
-            }}
+            popupRender={popupRender}
             disabled={parentComponents.length === 0}
           >
             <div
               style={{
                 padding: '0 8px',
-                backgroundColor: 'blue',
-                borderRadius: 4,
+                backgroundColor: '#325cd1',
+                borderRight: '1px solid #ccc',
                 color: '#fff',
                 cursor: 'pointer',
                 whiteSpace: 'nowrap',
@@ -165,7 +174,7 @@ function SelectedMask({
           </Dropdown>
 
           {currentComponentId !== 1 && (
-            <div style={{ padding: '0 8px', backgroundColor: 'blue' }}>
+            <div style={{ padding: '0 8px', backgroundColor: '#325cd1' }}>
               <Popconfirm
                 title="确认删除？"
                 okText={'确认'}
